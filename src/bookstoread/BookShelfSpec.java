@@ -1,6 +1,6 @@
 package bookstoread;
 
-import static org.junit.jupiter.api.Assertions.assertEqual;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -24,11 +24,26 @@ public class BookShelfSpec {
         assertEquals(2, books.size(), () -> "BookShelf should have two books.");
     }
 
-    @Text
+    @Test
     public void emptyBookShelfWhenAddIsCalledWithoutBooks(){
         Bookshelf shelf = new Bookshelf();
         shelf.add();
         List<String> books = shelf.books();
         assertTrue(books.isEmpty(), () -> "BookShelf should be empty");
+    }
+
+    @Test
+    void booksReturnedFromBookShelfIsImmutableForClient(){
+        BookShelf shelf = new BookShelf();
+        shelf.add("Effective java", "Code complet");
+        List<String> books = shelf.books();
+
+        try{
+            books.add("the Mythical Man-Month");
+            fail(() -> "Should not be able to add book to books");
+
+        } catch (Exception e){
+            assertTrue(e instanceof UnsupportedOperationExeception, ()-> "Should throw UnsupportedOperationException.");
+        }
     }
 }
